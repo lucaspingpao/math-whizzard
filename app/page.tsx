@@ -6,6 +6,7 @@ import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import "./../app/app.css";
 import { Amplify } from "aws-amplify";
+import Button from './components/Button';
 import outputs from "@/amplify_outputs.json";
 import "@aws-amplify/ui-react/styles.css";
 
@@ -40,7 +41,7 @@ export default function App() {
   return (
     <main>
       <h1>{user?.signInDetails?.loginId}'s todos</h1>
-      <button onClick={createTodo}>+ new</button>
+      <Button onClick={createTodo} variant="primary">+ new</Button>
       <ul>
         {todos.map(todo => <li
             onClick={() => deleteTodo(todo.id)}
@@ -55,7 +56,7 @@ export default function App() {
           Review next steps of this tutorial.
         </a>
       </div>
-      <button onClick={signOut}>Sign out</button>
+      <Button onClick={signOut} variant="secondary">Sign out</Button>
     </main>
   );
 }
