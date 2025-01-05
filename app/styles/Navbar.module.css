@@ -4,19 +4,24 @@
   width: 100%;
 }
 
-.navbar-container {
-  max-width: 1200px;
-  margin: 0 auto;
+.navbarContainer {
+  margin-left: 8px;
   display: flex;
   gap: 2rem;
+  align-items: center;
 }
 
-.nav-link {
+.navLink {
   color: white;
   text-decoration: none;
   font-size: 1.1rem;
 }
 
-.nav-link:hover {
+.navLink:hover {
   color: #007bff;
+}
+
+.profilePic {
+  margin-left: auto;
+  cursor: pointer;
 }
