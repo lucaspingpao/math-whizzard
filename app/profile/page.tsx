@@ -15,7 +15,7 @@ interface ProfileDashboardProps {
 }
 
 // Mock data for testing/development
-export const mockProfileData: ProfileDashboardProps = {
+const mockProfileData: ProfileDashboardProps = {
   name: "Jane Smith",
   title: "Senior Software Engineer",
   stats: {
@@ -26,12 +26,9 @@ export const mockProfileData: ProfileDashboardProps = {
   avatarUrl: "https://example.com/avatar.jpg"
 };
 
-const ProfileDashboard: FC<ProfileDashboardProps> = ({
-  name,
-  title,
-  stats,
-  avatarUrl
-}) => {
+const { name, title, stats, avatarUrl } = mockProfileData;
+
+export default function ProfileDashboard() {
   return (
     <div className={styles.container}>
       <div className={styles.profileCard}>
@@ -44,15 +41,15 @@ const ProfileDashboard: FC<ProfileDashboardProps> = ({
         </div>
         <div className={styles.stats}>
           <div className={styles.statItem}>
-            <span className={styles.statNumber}>{mockProfileData.stats.followers}</span>
+            <span className={styles.statNumber}>{stats.followers}</span>
             <span className={styles.statLabel}>Followers</span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statNumber}>{mockProfileData.stats.following}</span>
+            <span className={styles.statNumber}>{stats.following}</span>
             <span className={styles.statLabel}>Following</span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statNumber}>{mockProfileData.stats.posts}</span>
+            <span className={styles.statNumber}>{stats.posts}</span>
             <span className={styles.statLabel}>Posts</span>
           </div>
         </div>
@@ -60,5 +57,3 @@ const ProfileDashboard: FC<ProfileDashboardProps> = ({
     </div>
   );
 };
-
-export default ProfileDashboard;

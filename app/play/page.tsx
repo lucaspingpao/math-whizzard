@@ -11,7 +11,7 @@ export default function PlayGame() {
   const NUM_LIVES = 3;
   const symbols = ['+', '−', '×', '÷', '='];
 
-  const [level, setLevel] = useState<number>(1);
+  const [level, setLevel] = useState<number>(3);
   const [board, setBoard] = useState<SquareState[][]>(boards[level - 1]);
   const [expression, setExpression] = useState<string[]>([]);
   const [confirm, setConfirm] = useState<string>('');
