@@ -35,8 +35,8 @@ export default function Leaderboard() {
     fetch(apiUrl)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
-          setStats(data);
+        const parsedData = JSON.parse(data.body).data;
+        setStats(parsedData);
       })
       .catch(error => console.error('Error:', error));
   }, []);
@@ -50,7 +50,7 @@ export default function Leaderboard() {
             <th className={styles.th}>Rank</th>
             <th className={styles.th}>Player</th>
             <th className={styles.th}>Score</th>
-            <th className={styles.th}>Time</th>
+            <th className={styles.th}>Date</th>
           </tr>
         </thead>
         <tbody>

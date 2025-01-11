@@ -3,6 +3,7 @@ import logging
 import pymysql
 import json
 import os
+from datetime import datetime
 
 # RDS settings
 user_name = os.environ['DB_USER']
@@ -33,22 +34,24 @@ logger.info("SUCCESS: Connection to RDS for MySQL instance succeeded")
 
 
 def lambda_handler(event, context):
-    """
-    Fetch all data from the Stats table and return it as JSON.
-    """
+    # Fetch all data from the Stats table and return it as JSON.
     try:
         with conn.cursor() as cur:
             # Fetch all rows from the Stats table
-            cur.execute("SELECT * FROM Stats")
-            stats_data = cur.fetchall()  # Fetch all rows as a list of dictionaries
+            cur.execute("SELECT * FROM stats")
+            stats = cur.fetchall()
 
         # Log and return the data
         logger.info("Fetched data from Stats table:")
-        logger.info(stats_data)
+        logger.info(stats)
+
+        stats_serializable = [
+            (id, user_id, score, created_at.isoformat()) for id, user_id, score, created_at in stats
+        ]
 
         return {
             "statusCode": 200,
-            "body": json.dumps({"message": "Data fetched successfully", "data": stats_data})
+            "body": json.dumps({"message": "Data fetched successfully", "data": stats_serializable})
         }
 
     except Exception as e:
