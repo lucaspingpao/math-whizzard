@@ -1,53 +1,46 @@
 "use client";
 
-import React from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../styles/Stats.module.css';
 
-interface GameStats {
-  playerName: string;
+interface Stats {
+  user_id: string;
   score: number;
-  gamesPlayed: number;
-  winPercentage: number;
+  created_at: string;
 }
 
-interface LeaderboardProps {
-  stats: GameStats[];
-}
-
-const mockStats: GameStats[] = [
+const mockStats: Stats[] = [
   {
-    playerName: "John Doe",
+    user_id: "alice_test",
     score: 1250,
-    gamesPlayed: 45,
-    winPercentage: 68.5
+    created_at: "2023-05-01T12:00:00Z"
   },
   {
-    playerName: "Jane Smith", 
-    score: 980,
-    gamesPlayed: 32,
-    winPercentage: 62.3
+    user_id: "alice_test",
+    score: 1250,
+    created_at: "2023-05-01T12:00:00Z"
   },
   {
-    playerName: "Bob Wilson",
-    score: 1450,
-    gamesPlayed: 52,
-    winPercentage: 71.2
+    user_id: "alice_test",
+    score: 1250,
+    created_at: "2023-05-01T12:00:00Z"
   },
-  {
-    playerName: "Alice Brown",
-    score: 875,
-    gamesPlayed: 28,
-    winPercentage: 57.8
-  },
-  {
-    playerName: "Mike Johnson",
-    score: 1125,
-    gamesPlayed: 39,
-    winPercentage: 64.9
-  }
 ];
 
 export default function Leaderboard() {
+  const apiUrl = 'https://smwylkwm55.execute-api.us-east-2.amazonaws.com/default/stats';
+  const [stats, setStats] = useState(mockStats);
+
+  useEffect(() => {
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+          setStats(data);
+      })
+      .catch(error => console.error('Error:', error));
+  }, []);
+
   return (
     <div className={styles.leaderboard}>
       <h2 className={styles.h2}>Leaderboard</h2>
@@ -57,20 +50,17 @@ export default function Leaderboard() {
             <th className={styles.th}>Rank</th>
             <th className={styles.th}>Player</th>
             <th className={styles.th}>Score</th>
-            <th className={styles.th}>Games</th>
-            <th className={styles.th}>Win %</th>
+            <th className={styles.th}>Time</th>
           </tr>
         </thead>
         <tbody>
-          {mockStats
-            .sort((a, b) => b.score - a.score)
+          {stats
             .map((player, index) => (
-              <tr key={player.playerName} className={styles.tr}>
+              <tr key={index} className={styles.tr}>
                 <td className={styles.td}>{index + 1}</td>
-                <td className={styles.td}>{player.playerName}</td>
+                <td className={styles.td}>{player.user_id}</td>
                 <td className={styles.td}>{player.score}</td>
-                <td className={styles.td}>{player.gamesPlayed}</td>
-                <td className={styles.td}>{player.winPercentage.toFixed(1)}%</td>
+                <td className={styles.td}>{player.created_at}</td>
               </tr>
             ))}
         </tbody>

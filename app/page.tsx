@@ -2,17 +2,16 @@
 
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useState, useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-import "./../app/app.css";
 import { Amplify } from "aws-amplify";
 import Button from './components/Button';
+import "./../app/app.css";
+
 import outputs from "@/amplify_outputs.json";
-import "@aws-amplify/ui-react/styles.css";
+import type { Schema } from "@/amplify/data/resource";
+import { generateClient } from "aws-amplify/data";
+const client = generateClient<Schema>();
 
 Amplify.configure(outputs);
-
-const client = generateClient<Schema>();
 
 export default function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
@@ -40,7 +39,7 @@ export default function App() {
 
   return (
     <main>
-      <h1>{user?.signInDetails?.loginId}'s todos</h1>
+      <h1>Welcome back, {user?.signInDetails?.loginId}!</h1>
       <Button onClick={createTodo} variant="primary">+ new</Button>
       <ul>
         {todos.map(todo => <li
