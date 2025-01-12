@@ -12,8 +12,12 @@ export default function Navbar() {
         <Link href="/about" className={styles.navLink}>About</Link>
         <Link href="/play" className={styles.navLink}>Play Game</Link>
         <Link href="/stats" className={styles.navLink}>Stats</Link>
-        <div className={styles.profilePic}>
-          <Menu trigger={<Avatar />}>
+        <div className={styles.menu}>
+          <Menu trigger={
+            <div className={styles.profilePic}>
+              <Avatar />
+            </div>
+          }>
             <Link href="/profile">
               <MenuItem style={{width: "100%"}}>
                 Profile

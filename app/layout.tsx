@@ -4,10 +4,10 @@ import React from "react";
 import Navbar from "./components/Navbar";
 import { Amplify } from "aws-amplify";
 import "./app.css";
-import "./components/Button.css";
 import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import outputs from "@/amplify_outputs.json";
+import Footer from "./components/Footer";
 
 Amplify.configure(outputs);
 
@@ -18,10 +18,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>      
+      <body className="layout-container">      
         <Authenticator>
-          <Navbar />
-          {children}
+          <div className="content-wrapper">
+            <Navbar />
+            <main className="main-content">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </Authenticator>
       </body>
     </html>

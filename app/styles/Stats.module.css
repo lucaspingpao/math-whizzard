@@ -15,6 +15,7 @@
   border-collapse: collapse;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  table-layout: fixed;
 }
 
 .leaderboard th,
@@ -22,6 +23,7 @@
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  width: 25%;
 }
 
 .leaderboard th {

@@ -21,7 +21,20 @@
   color: #007bff;
 }
 
-.profilePic {
+.menu {
   margin-left: auto;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.profilePic {
+  transition: transform 0.2s ease;
+}
+
+.profilePic:hover {
+  transform: scale(1.1);
+}
+
+.profilePic:active {
+  transform: scale(0.95);
 }

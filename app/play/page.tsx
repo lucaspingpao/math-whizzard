@@ -6,12 +6,13 @@ import styles from '../styles/PlayGame.module.css';
 import History from '../components/History';
 import { SquareState, HistoryState } from '../types/types';
 import boards from '../components/Boards';
+import { Button } from '@aws-amplify/ui-react';
 
 export default function PlayGame() {
   const NUM_LIVES = 3;
   const symbols = ['+', '−', '×', '÷', '='];
 
-  const [level, setLevel] = useState<number>(3);
+  const [level, setLevel] = useState<number>(2);
   const [board, setBoard] = useState<SquareState[][]>(boards[level - 1]);
   const [expression, setExpression] = useState<string[]>([]);
   const [confirm, setConfirm] = useState<string>('');
@@ -122,30 +123,41 @@ export default function PlayGame() {
   }
 
   const evaluate = (tokens: string[]) => {
-    let result = parseInt(tokens[0]);
-    for (let i = 1; i < tokens.length; i += 2) {
-      const operator = tokens[i];
-      const operand = parseInt(tokens[i + 1]);
-      switch (operator) {
-        case '+':
-          result += operand;
-          break;
-        case '−':
-          result -= operand;
-          break;
-        case '×':
-          result *= operand;
-          break;
-        case '÷':
-          result /= operand;
-          break;
+    const stack = [];
+    let sign = '+';
+    let val = 0;
+    let prev = 1;
+
+    for (let i = 0; i < tokens.length; i++) {
+      if (!symbols.includes(tokens[i])) {
+        val = parseInt(tokens[i]);
+      }
+
+      if (symbols.includes(tokens[i]) || i === tokens.length - 1) {
+        switch (sign) {
+          case '+':
+            stack.push(val);
+            break;
+          case '−':
+            stack.push(-1 * val);
+            break;
+          case '×':
+            prev = stack.pop() ?? 1;
+            stack.push(prev * val);
+            break;
+          case '÷':
+            prev = stack.pop() ?? 1;
+            stack.push(prev / val);
+            break;
+        }
+        sign = tokens[i];
+        val = 0;
       }
     }
-    return result;
+    return stack.reduce((acc, curr) => acc + curr, 0);
   }
 
   const verify = (expr: string[]) => {
-    console.log("history", history);
     const indexOfEquals = expr.indexOf('=');
     const left = evaluate(expr.slice(0, indexOfEquals))
     const right = evaluate(expr.slice(indexOfEquals + 1));
@@ -167,7 +179,12 @@ export default function PlayGame() {
         <h1 className={styles.title}>Play Game</h1>
         <p className={styles.description}>Score: {score}</p>
         <p className={styles.description}>Lives left: {lives}</p>
-        <div className={styles.grid}>
+        <div
+          className={styles.grid}
+          style={{
+            gridTemplateColumns: `repeat(${level * 2 + 3}, 60px)`,
+          }}
+        >
           {board.map((row, rowIndex) => (
             row.map((square, colIndex) => (
               <Square
@@ -180,13 +197,13 @@ export default function PlayGame() {
           ))}
         </div>
         <div>
-          <button className={styles.button} onClick={() => clearBoard(false)}>Clear</button>
-          <button
-            className={styles.button} onClick={() => verify(expression)}
+          <Button onClick={() => clearBoard(false)}>Clear</Button>
+          <Button
+            onClick={() => verify(expression)}
             disabled={!expression.includes('=')}
           >
             Evaluate
-          </button>
+          </Button>
         </div>
         <div className={styles.expression}>{expression.join(' ')}</div>
         <div className={styles.expression}>{confirm}</div>
