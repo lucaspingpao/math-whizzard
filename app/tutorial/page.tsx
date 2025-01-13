@@ -5,8 +5,8 @@ import styles from '../styles/Tutorial.module.css';
 export default function Tutorial() {
   return (
     <main className={styles.mainContainer}>
-      <h1 className={styles.pageTitle}>About Us</h1>
-      <p className={styles.pageSubtitle}>Learn more about our game and team.</p>
+      <h1 className={styles.pageTitle}>Tutorial</h1>
+      <p className={styles.pageSubtitle}>How to play PαthMαth</p>
       
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Our Game</h2>

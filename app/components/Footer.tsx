@@ -17,7 +17,7 @@ export default function Footer() {
           <a href="https://devpost.com/software/pathmath" className={styles.link} target="_blank" rel="noopener noreferrer">
             <FaDev size={24} />
           </a>
-          <a href="#" className={styles.link} target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/lucaspingpao/path-math" className={styles.link} target="_blank" rel="noopener noreferrer">
             <FaGithub size={24} />
           </a>
           <a href="#" className={styles.link} target="_blank" rel="noopener noreferrer">

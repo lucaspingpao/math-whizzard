@@ -22,9 +22,9 @@ export default function RootLayout({
         <Authenticator>
           <div className="content-wrapper">
             <Navbar />
-            <main className="main-content">
+            <div className="main-content">
               {children}
-            </main>
+            </div>
             <Footer />
           </div>
         </Authenticator>

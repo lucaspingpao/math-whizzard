@@ -187,7 +187,7 @@ export default function PlayGame() {
   */
 
   return (
-    <main className={styles.container}>
+    <div className={styles.container}>
       <div className={styles.column}>
         <div
           className={styles.grid}
@@ -222,6 +222,6 @@ export default function PlayGame() {
       <div className={styles.column}>
         <History history={history} />
       </div>
-    </main>
+    </div>
   );
 }

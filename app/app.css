@@ -9,7 +9,14 @@ body {
 
 main {
   margin: 0 auto;
-  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 85vh;
+  background-color: #f5f5f5;
+  padding: 2rem 10rem 2rem 10rem;
+  width: 70%;
 }
 
 .layout-container {
@@ -28,6 +35,48 @@ main {
 }
 
 .logo {
-  width: 300px;
+  width: 200px;
   height: auto;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.button-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.tutorial-btn, .play-btn {
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.tutorial-btn {
+  background-color: #2196F3;
+  color: white;
+  text-decoration: none;
+}
+
+.play-btn {
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+}
+
+.tutorial-btn:hover, .play-btn:hover {
+  transform: scale(1.05);
 }
