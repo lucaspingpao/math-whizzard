@@ -1,10 +1,8 @@
 .history {
   width: 600px;
   height: 360px;
-  margin: 20px auto;
   padding: 10px;
   border-radius: 10px;
-  overflow-y: auto;
 }
 
 .chalkboard {

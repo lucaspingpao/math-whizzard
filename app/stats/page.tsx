@@ -42,6 +42,8 @@ export default function Leaderboard() {
   };
 
   const getTimeAgo = (dateString: string): string => {
+    if (dateString === "...") return dateString;
+
     const date = new Date(dateString);
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
@@ -68,6 +70,13 @@ export default function Leaderboard() {
       .then(response => response.json())
       .then(data => {
         const parsedData = JSON.parse(data.body).data;
+        while (parsedData.length < 10) {
+          parsedData.push({
+            user_id: "...",
+            score: "...",
+            created_at: "..."
+          });
+        }
         setStats(parsedData);
       })
       .catch(error => console.error('Error:', error));
@@ -75,7 +84,7 @@ export default function Leaderboard() {
 
   return (
     <div className={styles.leaderboard}>
-      <h2 className={styles.h2}>Leaderboard</h2>
+      <h1>Leaderboard</h1>
       <table className={styles.table}>
         <thead>
           <tr>

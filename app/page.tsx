@@ -12,7 +12,7 @@ Amplify.configure(outputs);
 export default function App() {
   return (
     <main>
-      <h1>PαthMαth</h1>
+      <img src={PathMathLogo.src} alt="PathMath Logo"/>
       <p className="tagline">Master math through visual pathways</p>
       <div className="button-container">
         <Link href="/tutorial" className="tutorial-btn">Tutorial</Link>

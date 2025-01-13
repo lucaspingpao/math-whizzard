@@ -1,8 +1,27 @@
 .container {
+  display: grid;
+  gap: 10px;
+  width: 80%;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.rowFullWidth {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  font-size: 144px;
+}
+
+.column {
   display: flex;
-  flex-direction: row;
-  padding: 1rem;
-  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .title {
@@ -10,12 +29,10 @@
   margin-bottom: 1rem;
 }
 
-.grid {
+.board {
   display: grid;
   gap: 2px;
   padding: 1px;
-  grid-template-columns: repeat(2, 50%);
-  width: 100%;
 }
 
 .expression {
@@ -23,19 +40,36 @@
   color: blue;
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.5rem;
-  min-height: 60px;
-  grid-column: span 1;
-  width: 100%;
-}
-
 .buttonGroup {
   padding: 10px;
   display: flex;
   flex-direction: row;
   gap: 10px;
+}
+
+.description {
+  margin: 0px;
+}
+
+.logo {
+  width: 500px;
+}
+
+.timerBar {
+  width: 100%;
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.timerFill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 1s linear;
+} 
+
+.headerRow {
+  display: flex;
+  width: 100%;
 }

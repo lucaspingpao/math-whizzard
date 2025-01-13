@@ -7,10 +7,12 @@ import History from '../components/History';
 import { SquareState, HistoryState } from '../types/types';
 import boards from '../components/Boards';
 import { Button } from '@aws-amplify/ui-react';
+import PathMathLogo from "../../public/PathMath-logo.png";
 
 export default function PlayGame() {
   const NUM_LIVES = 3;
   const symbols = ['+', '−', '×', '÷', '='];
+  const TIME_LIMIT = 10;
 
   const [level, setLevel] = useState<number>(2);
   const [board, setBoard] = useState<SquareState[][]>(boards[level - 1]);
@@ -21,6 +23,28 @@ export default function PlayGame() {
   const [clicked, setClicked] = useState<string[]>([]);
   const [history, setHistory] = useState<HistoryState[]>([]);
   const [highlight, setHighlight] = useState<number>(4);
+  const [timeLeft, setTimeLeft] = useState<number>(TIME_LIMIT);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 0) {
+          clearInterval(timer);
+          setLives(prev => prev - 1);
+          clearBoard(true);
+          return TIME_LIMIT;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+    
+    setTimerId(timer);
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [level]);
 
   const initializeBoard = () => {
     setBoard(prev =>
@@ -181,46 +205,63 @@ export default function PlayGame() {
     }
     clearBoard(true);
   }
-  /*
-<p className={styles.description}>Score: {score}</p>
-      <p className={styles.description}>Lives left: {lives}</p>
-  */
 
   return (
     <div className={styles.container}>
-      <div className={styles.column}>
-        <div
-          className={styles.grid}
-          style={{
-            gridTemplateColumns: `repeat(${level * 2 + 3}, 60px)`,
-            justifyContent: 'center'
-          }}
-        >
-          {board.map((row, rowIndex) => (
-            row.map((square, colIndex) => (
-              <Square
-                key={`${rowIndex}-${colIndex}`}
-                color={square.color}
-                val={square.val}
-                onClick={() => handleSquareClick(rowIndex, colIndex)}
-              />
-            ))
-          ))}
-        </div>
-        <div className={styles.buttonGroup}>
-          <Button onClick={() => clearBoard(false)}>Clear</Button>
-          <Button
-            onClick={() => verify(expression)}
-            disabled={!expression.includes('=')}
-          >
-            Evaluate
-          </Button>
-        </div>
-        <div className={styles.expression}>{expression.join(' ')}</div>
-        <div className={styles.expression} style={{color: confirm === 'Correct :)' ? 'limegreen' : 'red'}}>{confirm}</div>
+      <div className={styles.rowFullWidth}>
+        <h1>PαthMαth</h1>
       </div>
-      <div className={styles.column}>
-        <History history={history} />
+      <div className={styles.row}>
+        <div className={styles.column}>
+          <div className={styles.headerRow}>
+            <p className={styles.description}>Score: {score}</p>
+            <div className={styles.timerBar}>
+              <div 
+                className={styles.timerFill}
+                style={{
+                  width: `${(timeLeft / TIME_LIMIT) * 100}%`,
+                  backgroundColor: timeLeft > 10 ? '#4CAF50' : '#f44336',
+                  height: '10px',
+                  transition: 'width 1s linear',
+                  borderRadius: '5px'
+                }}
+              />
+            </div>
+            <p className={styles.description}>Lives left: {lives}</p>
+          </div>
+          <div
+            className={styles.board}
+            style={{
+              gridTemplateColumns: `repeat(${level * 2 + 3}, 60px)`,
+              
+            }}
+          >
+            {board.map((row, rowIndex) => (
+              row.map((square, colIndex) => (
+                <Square
+                  key={`${rowIndex}-${colIndex}`}
+                  color={square.color}
+                  val={square.val}
+                  onClick={() => handleSquareClick(rowIndex, colIndex)}
+                />
+              ))
+            ))}
+          </div>
+          <div className={styles.buttonGroup}>
+            <Button onClick={() => clearBoard(false)}>Clear</Button>
+            <Button
+              onClick={() => verify(expression)}
+              disabled={!expression.includes('=')}
+            >
+              Evaluate
+            </Button>
+          </div>
+          <div className={styles.expression}>{expression.join(' ')}</div>
+          <div className={styles.expression} style={{color: confirm === 'Correct :)' ? 'limegreen' : 'red'}}>{confirm}</div>
+        </div>
+        <div className={styles.column}>
+          <History history={history} />
+        </div>
       </div>
     </div>
   );

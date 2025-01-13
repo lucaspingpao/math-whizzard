@@ -14,7 +14,6 @@ main {
   align-items: center;
   justify-content: center;
   min-height: 85vh;
-  background-color: #f5f5f5;
   padding: 2rem 10rem 2rem 10rem;
   width: 70%;
 }
@@ -79,4 +78,9 @@ h1 {
 
 .tutorial-btn:hover, .play-btn:hover {
   transform: scale(1.05);
+}
+
+img {
+  width: 300px;
+  border-radius: 20px;
 }
