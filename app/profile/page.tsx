@@ -1,7 +1,7 @@
+"use client";
 
-// ProfileDashboard component displays user profile information and stats
-import { FC } from 'react';
 import styles from '../styles/ProfileDashboard.module.css';
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 interface ProfileDashboardProps {
   name: string;
@@ -29,8 +29,11 @@ const mockProfileData: ProfileDashboardProps = {
 const { name, title, stats, avatarUrl } = mockProfileData;
 
 export default function ProfileDashboard() {
+  const { user } = useAuthenticator();
+
   return (
     <div className={styles.container}>
+      <h1 className={styles.h1}>Welcome back, {user?.signInDetails?.loginId}!</h1>
       <div className={styles.profileCard}>
         <div className={styles.avatarContainer}>
           <img src={avatarUrl} alt={name} className={styles.avatar} />

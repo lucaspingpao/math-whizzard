@@ -1,8 +1,8 @@
 "use client";
 
-import styles from '../styles/About.module.css';
+import styles from '../styles/Tutorial.module.css';
 
-export default function About() {
+export default function Tutorial() {
   return (
     <main className={styles.mainContainer}>
       <h1 className={styles.pageTitle}>About Us</h1>

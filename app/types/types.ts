@@ -6,4 +6,5 @@ export interface SquareState {
 export interface HistoryState {
   equation: string;
   correct: boolean;
+  score: number;
 }

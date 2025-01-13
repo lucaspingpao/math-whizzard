@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from 'react';
 import Square from '../components/Square';
@@ -20,6 +20,7 @@ export default function PlayGame() {
   const [lives, setLives] = useState<number>(NUM_LIVES);
   const [clicked, setClicked] = useState<string[]>([]);
   const [history, setHistory] = useState<HistoryState[]>([]);
+  const [highlight, setHighlight] = useState<number>(4);
 
   const initializeBoard = () => {
     setBoard(prev =>
@@ -37,6 +38,7 @@ export default function PlayGame() {
   }, [level]);
   
   const handleSquareClick = (row: number, col: number) => {
+    console.log('highlight', highlight)
     // undo click
     if (board[row][col].color !== '#ffffff') {
       if (clicked[clicked.length - 1] === `${row},${col}`) {
@@ -69,10 +71,12 @@ export default function PlayGame() {
           return nxt;
         });
       }
+      const oldHighlight = (highlight + 4) % 5;
+      setHighlight(oldHighlight);
       return;
     }
 
-    // click adjacent
+    // must click adjacent
     if (clicked.length > 0) {
       const [prevRow, prevCol] = clicked[clicked.length - 1].split(',').map(Number);
       if (Math.abs(prevRow - row) > 1 || Math.abs(prevCol - col) > 1) {
@@ -85,13 +89,15 @@ export default function PlayGame() {
       return;
     }
 
+    const newHighlight = (highlight + 1) % 5;
     setBoard(prevGrid => {
-      const newGrid = [...prevGrid];
-      newGrid[row] = [...newGrid[row]];
-      newGrid[row][col] = {
-        ...newGrid[row][col],
-        color: `#2fb55d`
-      };
+      const G = Math.round(196 - newHighlight * 28).toString(16).padStart(2, '0');
+      const B = Math.round(255 - newHighlight * 24).toString(16).padStart(2, '0');
+      const newGrid = prevGrid.map((r, i) => 
+        i === row ? r.map((cell, j) => 
+          j === col ? { ...cell, color: `#00${G}${B}` } : cell
+        ) : r
+      );
       return newGrid;
     });
 
@@ -107,6 +113,7 @@ export default function PlayGame() {
     });
     
     setClicked(prev => [...prev, `${row},${col}`]);
+    setHighlight(newHighlight);
   };
 
   const clearBoard = (discard: boolean) => {
@@ -120,6 +127,7 @@ export default function PlayGame() {
     });
     setExpression([]);
     setClicked([]);
+    setHighlight(0);
   }
 
   const evaluate = (tokens: string[]) => {
@@ -164,25 +172,28 @@ export default function PlayGame() {
     if (left === right) {
       setScore(prev => prev + left + clicked.length);
       setConfirm('Correct :)');
-      setHistory(prev => [...prev, {equation: expr.join(' '), correct: true}]);
+      setHistory(prev => [{equation: expr.join(' '), correct: true, score: left + clicked.length}, ...(prev.slice(0,3))]);
     } else {
+      setScore(prev => prev - Math.pow(10, level - 1));
       setConfirm('Incorrect :(');
       setLives(prev => prev - 1);
-      setHistory(prev => [...prev, {equation: expr.join(' '), correct: false}]);
+      setHistory(prev => [{equation: expr.join(' '), correct: false, score: Math.pow(10, level - 1)}, ...(prev.slice(0,3))]);
     }
     clearBoard(true);
   }
+  /*
+<p className={styles.description}>Score: {score}</p>
+      <p className={styles.description}>Lives left: {lives}</p>
+  */
 
   return (
     <main className={styles.container}>
       <div className={styles.column}>
-        <h1 className={styles.title}>Play Game</h1>
-        <p className={styles.description}>Score: {score}</p>
-        <p className={styles.description}>Lives left: {lives}</p>
         <div
           className={styles.grid}
           style={{
             gridTemplateColumns: `repeat(${level * 2 + 3}, 60px)`,
+            justifyContent: 'center'
           }}
         >
           {board.map((row, rowIndex) => (
@@ -196,7 +207,7 @@ export default function PlayGame() {
             ))
           ))}
         </div>
-        <div>
+        <div className={styles.buttonGroup}>
           <Button onClick={() => clearBoard(false)}>Clear</Button>
           <Button
             onClick={() => verify(expression)}
@@ -206,7 +217,7 @@ export default function PlayGame() {
           </Button>
         </div>
         <div className={styles.expression}>{expression.join(' ')}</div>
-        <div className={styles.expression}>{confirm}</div>
+        <div className={styles.expression} style={{color: confirm === 'Correct :)' ? 'limegreen' : 'red'}}>{confirm}</div>
       </div>
       <div className={styles.column}>
         <History history={history} />

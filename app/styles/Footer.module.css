@@ -1,18 +1,26 @@
 .footer {
-  background-color: #1a202c; /* Dark gray background */
-  color: #ffffff; /* White text */
-  padding: 2rem 1rem; /* Padding around the footer */
+  background-image: url('/blank-chalkboard-big.png');
+  color: #ffffff;
+  padding: 2rem 0 3rem 0;
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto; /* Center the content */
   text-align: center;
 }
 
 .text {
-  font-size: 0.875rem; /* Small text size */
-  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  margin-bottom: 0;
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
 }
 
 .links {
@@ -22,11 +30,12 @@
 }
 
 .link {
-  color: #63b3ed; /* Light blue text for links */
+  color: inherit;
   text-decoration: none;
   font-size: 0.875rem;
+  transition: transform 0.2s ease;
 }
 
 .link:hover {
-  text-decoration: underline;
+  transform: scale(1.25);
 }

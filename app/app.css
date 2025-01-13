@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Playpen+Sans&display=swap');
+
 body {
   margin: 0;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   height: 100vh;
   width: 100vw;
+  font-family: 'Playpen Sans', cursive;
 }
 
 main {
@@ -23,4 +25,9 @@ main {
 
 .main-content {
   flex: 1 0 auto;
+}
+
+.logo {
+  width: 300px;
+  height: auto;
 }

@@ -9,8 +9,8 @@ export default function Navbar() {
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
         <Link href="/" className={styles.navLink}>Home</Link>
-        <Link href="/about" className={styles.navLink}>About</Link>
-        <Link href="/play" className={styles.navLink}>Play Game</Link>
+        <Link href="/tutorial" className={styles.navLink}>Tutorial</Link>
+        <Link href="/play" className={styles.navLink}>Play</Link>
         <Link href="/stats" className={styles.navLink}>Stats</Link>
         <div className={styles.menu}>
           <Menu trigger={
