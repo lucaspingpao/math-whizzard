@@ -12,3 +12,11 @@ VALUES
     ("alice", 10, NOW()),
     ("bob", 20, NOW()),
     ("charlie", 30, NOW());
+
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    username VARCHAR(255)
+);

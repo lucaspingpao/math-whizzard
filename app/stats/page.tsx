@@ -66,9 +66,12 @@ export default function Leaderboard() {
   };
   
   useEffect(() => {
-    fetch(apiUrl)
+    fetch(apiUrl, {
+      method: 'GET',
+    })
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         const parsedData = JSON.parse(data.body).data;
         while (parsedData.length < 10) {
           parsedData.push({

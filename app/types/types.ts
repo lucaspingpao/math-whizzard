@@ -7,4 +7,5 @@ export interface HistoryState {
   equation: string;
   correct: boolean;
   score: number;
+  isNew: boolean;
 }

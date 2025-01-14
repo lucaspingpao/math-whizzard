@@ -1,6 +1,6 @@
 .container {
   display: grid;
-  gap: 10px;
+  gap: 30px;
   width: 85%;
   padding: 20px 0px 100px 0px;
   margin: 0px auto;
@@ -15,7 +15,6 @@
 .rowFullWidth {
   grid-template-columns: 1fr;
   justify-items: center;
-  font-size: 144px;
 }
 
 .column {
@@ -34,12 +33,10 @@
   display: grid;
   gap: 2px;
   padding: 1px;
-  margin: 10px;
 }
 
 .expression {
   text-align: center;
-  color: blue;
 }
 
 .buttonGroup {
@@ -55,15 +52,87 @@
 
 .timerBar {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   height: 10px;
   background-color: #ddd;
   border-radius: 5px;
-  margin: 5px auto;
+  margin: 15px auto 25px;
 }
 
-.timerFill {
-  height: 100%;
-  border-radius: 5px;
-  transition: width 1s linear;
+
+.gameOverTitle {
+  font-size: 2.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.finalScore {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 1rem;
+}
+
+.usernameDisplay {
+  font-size: 1.2rem;
+  color: #666;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.usernameInput {
+  width: 300px;
+  padding: 8px 12px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.inputLine {
+  display: flex;
+  gap: 2px;
+}
+
+.savedMessage {
+  margin: 5px 0 30px 0;
+  color: red;
+  text-align: 'center';
+  font-size: '0.75rem';
+}
+
+.playAgainButton {
+  padding: 8px 16px;
+  font-size: 1rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.playAgainButton:hover {
+  background-color: #45a049;
+}
+
+.playAgainButton:active {
+  background-color: #3d8b40;
+}
+
+.statsButton {
+  padding: 8px 16px;
+  font-size: 1rem;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.statsButton:hover {
+  background-color: #1976D2;
+}
+
+.statsButton:active {
+  background-color: #1565C0;
 }

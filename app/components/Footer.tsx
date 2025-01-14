@@ -15,16 +15,16 @@ export default function Footer() {
         </div>
         <div className={styles.links}>
           <a href="https://devpost.com/software/pathmath" className={styles.link} target="_blank" rel="noopener noreferrer">
-            <FaDev size={24} />
+            <FaDev size={30} />
           </a>
           <a href="https://github.com/lucaspingpao/path-math" className={styles.link} target="_blank" rel="noopener noreferrer">
-            <FaGithub size={24} />
+            <FaGithub size={30} />
           </a>
-          <a href="#" className={styles.link} target="_blank" rel="noopener noreferrer">
-            <FaAws size={24} />
+          <a href="https://community.aws/content/2rd0vJMfg1g59W9c6N3QPVRDz7b/pathmath-find-the-right-path-to-practice-math" className={styles.link} target="_blank" rel="noopener noreferrer">
+            <FaAws size={30} />
           </a>
-          <a href="#" className={styles.link} target="_blank" rel="noopener noreferrer">
-            <FaYoutube size={24} />
+          <a href="https://www.youtube.com/@paocodingtutorials2143" className={styles.link} target="_blank" rel="noopener noreferrer">
+            <FaYoutube size={30} />
           </a>
         </div>
        
