@@ -1,9 +1,10 @@
 .container {
   display: grid;
   gap: 10px;
-  width: 80%;
-  padding: 20px;
-  margin: 0 auto;
+  width: 85%;
+  padding: 20px 0px 100px 0px;
+  margin: 0px auto;
+
 }
 
 .row {
@@ -33,6 +34,7 @@
   display: grid;
   gap: 2px;
   padding: 1px;
+  margin: 10px;
 }
 
 .expression {
@@ -41,14 +43,10 @@
 }
 
 .buttonGroup {
-  padding: 10px;
+  margin: 10px;
   display: flex;
   flex-direction: row;
-  gap: 10px;
-}
-
-.description {
-  margin: 0px;
+  gap: 12px;
 }
 
 .logo {
@@ -57,19 +55,15 @@
 
 .timerBar {
   width: 100%;
+  max-width: 400px;
   height: 10px;
   background-color: #ddd;
   border-radius: 5px;
-  margin: 10px 0;
+  margin: 5px auto;
 }
 
 .timerFill {
   height: 100%;
   border-radius: 5px;
   transition: width 1s linear;
-} 
-
-.headerRow {
-  display: flex;
-  width: 100%;
 }

@@ -12,7 +12,7 @@ import PathMathLogo from "../../public/PathMath-logo.png";
 export default function PlayGame() {
   const NUM_LIVES = 3;
   const symbols = ['+', '−', '×', '÷', '='];
-  const TIME_LIMIT = 10;
+  const TIME_LIMIT = 15;
 
   const [level, setLevel] = useState<number>(2);
   const [board, setBoard] = useState<SquareState[][]>(boards[level - 1]);
@@ -213,27 +213,13 @@ export default function PlayGame() {
       </div>
       <div className={styles.row}>
         <div className={styles.column}>
-          <div className={styles.headerRow}>
-            <p className={styles.description}>Score: {score}</p>
-            <div className={styles.timerBar}>
-              <div 
-                className={styles.timerFill}
-                style={{
-                  width: `${(timeLeft / TIME_LIMIT) * 100}%`,
-                  backgroundColor: timeLeft > 10 ? '#4CAF50' : '#f44336',
-                  height: '10px',
-                  transition: 'width 1s linear',
-                  borderRadius: '5px'
-                }}
-              />
-            </div>
-            <p className={styles.description}>Lives left: {lives}</p>
+          <div className={styles.expression}>
+            {expression.length > 0 ? expression.join(' ') : "Click on the squares to start typing an expression!"}
           </div>
           <div
             className={styles.board}
             style={{
               gridTemplateColumns: `repeat(${level * 2 + 3}, 60px)`,
-              
             }}
           >
             {board.map((row, rowIndex) => (
@@ -247,6 +233,18 @@ export default function PlayGame() {
               ))
             ))}
           </div>
+          <div className={styles.timerBar}>
+            <div 
+              className={styles.timerFill}
+              style={{
+                width: `${(timeLeft / TIME_LIMIT) * 100}%`,
+                backgroundColor: timeLeft > 5 ? '#4CAF50' : timeLeft > 2 ? 'orange' : '#f44336',
+                height: '10px',
+                transition: 'width 1s linear',
+                borderRadius: '5px'
+              }}
+            />
+          </div>
           <div className={styles.buttonGroup}>
             <Button onClick={() => clearBoard(false)}>Clear</Button>
             <Button
@@ -256,11 +254,12 @@ export default function PlayGame() {
               Evaluate
             </Button>
           </div>
-          <div className={styles.expression}>{expression.join(' ')}</div>
-          <div className={styles.expression} style={{color: confirm === 'Correct :)' ? 'limegreen' : 'red'}}>{confirm}</div>
+          <div className={styles.expression} style={{color: confirm === 'Correct :)' ? 'limegreen' : 'red'}}>
+            {confirm.length > 0 ? confirm : 'Click "Evaluate" to submit your equation!'}
+          </div>
         </div>
         <div className={styles.column}>
-          <History history={history} />
+          <History history={history} score={score} lives={lives}/>
         </div>
       </div>
     </div>
