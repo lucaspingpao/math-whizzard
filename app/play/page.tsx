@@ -15,7 +15,7 @@ export default function PlayGame() {
   const { user } = useAuthenticator();
   const NUM_LIVES = 3;
   const symbols = ['+', '−', '×', '÷', '='];
-  const TIME_LIMIT = 2;
+  const TIME_LIMIT = 20;
 
   const [level, setLevel] = useState<number>(1);
   const [board, setBoard] = useState<SquareState[][]>(boards[level - 1]);
