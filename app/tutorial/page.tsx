@@ -4,8 +4,9 @@ import styles from '../styles/Tutorial.module.css';
 import { useState, useEffect, useRef } from 'react';
 import Square from '../components/Square';
 import { SquareState } from '../types/types';
-import { boards, levelSizes } from '../constants/boardStates';
 import { Button, Input } from '@aws-amplify/ui-react';
+import { tutorialBoards, tutorialMessages } from '../constants/tutorial';
+import Link from 'next/link';
 
 export default function Tutorial() {
   const NUM_LIVES = 3;
@@ -13,40 +14,16 @@ export default function Tutorial() {
   const TIME_LIMIT = 30;
 
   const [level, setLevel] = useState<number>(1);
-  const [board, setBoard] = useState<SquareState[][]>(boards[level - 1]);
+  const [board, setBoard] = useState<SquareState[][]>(tutorialBoards[0]);
   const [expression, setExpression] = useState<string[]>([]);
   const [confirm, setConfirm] = useState<string>('');
   const [score, setScore] = useState<number>(0);
   const [lives, setLives] = useState<number>(NUM_LIVES);
   const [clicked, setClicked] = useState<string[]>([]);
   const [highlight, setHighlight] = useState<number>(4);
-  const [timeLeft, setTimeLeft] = useState<number>(TIME_LIMIT);
-  const timerRef = useRef<null | ReturnType<typeof setInterval>>(null);
-  const [userInput, setUserInput] = useState<string>('');
-  const [gameOver, setGameOver] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>('not found');
-  const [saved, setSaved] = useState<string>('Click save to change your username');
-
-  const initializeBoard = () => {
-    setBoard(prev =>
-      prev.map(row =>
-        row.map(sq => ({
-          color: '#ffffff',
-          val: symbols.includes(sq.val) ? sq.val : Math.floor(Math.random() * 9 + 1).toString()
-        }))
-      )
-    );
-    setHighlight(-1);
-    setExpression([]);
-    setClicked([]);
-  }
-  
-  useEffect(() => {
-    initializeBoard();
-  }, []);
+  const [tutorial, setTutorial] = useState<number>(0);
   
   const handleSquareClick = (row: number, col: number) => {
-    if (gameOver) return;
     // undo click
     if (board[row][col].color !== '#ffffff') {
       if (clicked[clicked.length - 1] === `${row},${col}`) {
@@ -81,6 +58,10 @@ export default function Tutorial() {
       }
       const oldHighlight = (highlight + 4) % 5;
       setHighlight(oldHighlight);
+      return;
+    }
+
+    if (board[row][col].val === '🚧') {
       return;
     }
 
@@ -124,14 +105,22 @@ export default function Tutorial() {
     setHighlight(newHighlight);
   };
 
-  const clearBoard = (discard: boolean) => {
-    setBoard(prev => {
-      return prev.map((row, i) => {
-        return row.map((sq, j) => ({
-          color: '#ffffff',
-          val: discard && !symbols.includes(sq.val) && clicked.includes(`${i},${j}`) ? Math.floor(Math.random() * 9 + 1).toString() : sq.val
-        }));
-      });
+  const clearBoard = () => {
+    setTutorial(prev => prev + 1);
+    setBoard(tutorialBoards[tutorial + 1]);
+    setExpression([]);
+    setClicked([]);
+    setHighlight(-1);
+  }
+
+  const clearColors = () => {
+    setBoard(prevGrid => {
+      const newGrid = prevGrid.map((r, i) =>
+        r.map((cell, j) =>
+          cell.color !== '#ffffff' ? { ...cell, color: '#ffffff' } : cell
+        )
+      );
+      return newGrid;
     });
     setExpression([]);
     setClicked([]);
@@ -184,13 +173,13 @@ export default function Tutorial() {
       setConfirm('Correct :)');
       
     } else {
-      const penalty = Math.pow(10, ((levelSizes.get(level) ?? 3) - 3) / 2);
+      const penalty = 10;
       newScore -= penalty;
       setScore(newScore);
       setConfirm('Incorrect :(');
       setLives((prev) => Math.max(prev - 1, 0));
     }
-    clearBoard(true);
+    clearBoard();
     levelUp(newScore);
   }
 
@@ -207,17 +196,31 @@ export default function Tutorial() {
     const threshold = scoreMap.get(level);
     if (threshold !== undefined && newScore >= threshold) {
       setLevel((prev) => Math.min(prev + 1, 6));
-      setBoard(boards[level]);
-      initializeBoard();
     }
   }
   const checkDisabled = (expr: string[]) => {
-    const indexOfEquals = expr.indexOf('=');
-    if (indexOfEquals === -1) return true;
-    const left = expr.slice(0, indexOfEquals);
-    const right = expr.slice(indexOfEquals + 1);
-    if (left.length === 0 || right.length === 0) return true;
-    if (symbols.includes(right[right.length - 1])) return true;
+    switch (tutorial) {
+      case 0:
+        return JSON.stringify(expr) !== JSON.stringify(['7', '+', '8', '=', '15']);
+      case 1:
+        return JSON.stringify(expr) !== JSON.stringify(['7', '×', '8', '=', '56']);
+      case 2:
+        return JSON.stringify(expr) !== JSON.stringify(['7', '×', '8', '=', '54']);
+      default:
+        return false;
+    }
+  }
+
+  const resetTutorial = () => {
+    setTutorial(0);
+    setBoard(tutorialBoards[0]);
+    setExpression([]);
+    setClicked([]);
+    setHighlight(-1);
+    setScore(0);
+    setLives(NUM_LIVES);
+    setLevel(1);
+    setConfirm('');
   }
 
   return (
@@ -226,9 +229,7 @@ export default function Tutorial() {
       <p className={styles.sectionText}>
         PαthMαth is a dynamic mental math maze searching game designed to help students improve arithmetic fluency.
       </p>
-      <p className={styles.sectionText}>
-        Follow the steps below to start playing!
-      </p>
+      {tutorial < 4 ?
       <div>
         <div className={styles.card}>
           <div className={styles.topBar}>
@@ -236,25 +237,23 @@ export default function Tutorial() {
             <span className={styles.topText}>Score: {score} / {scoreMap.get(level)}</span>
             <span className={styles.topText}>Level: {level}</span>
           </div>
-          <div className={styles.expression}>
-            {expression.length > 0 ? expression.join(' ') : "Click on the squares to start typing an expression!"}
-          </div>
+          
           <div className={styles.timerBar}>
             <div 
               className={styles.timerFill}
               style={{
-                width: `${(timeLeft / TIME_LIMIT) * 100}%`,
-                backgroundColor: timeLeft > 5 ? 'limegreen' : timeLeft > 2 ? 'orange' : 'red',
-                transition: timeLeft !== TIME_LIMIT ? 'width 0.1s linear' : 'none',
+                width: '70%',
+                backgroundColor: 'limegreen',
                 borderRadius: '5px',
                 height: '100%'
               }}
             />
           </div>
+
           <div
             className={styles.board}
             style={{
-              gridTemplateColumns: `repeat(${levelSizes.get(level)}, 60px)`,
+              gridTemplateColumns: 'repeat(5, 60px)',
             }}
           >
             {board.map((row, rowIndex) => (
@@ -269,13 +268,16 @@ export default function Tutorial() {
             ))}
           </div>
           <div className={styles.buttonGroup}>
-            <Button onClick={() => clearBoard(false)}>Clear</Button>
+            <Button onClick={clearColors}>Clear</Button>
             <Button
               onClick={() => verify(expression)}
               disabled={checkDisabled(expression)}
             >
               Evaluate
             </Button>
+          </div>
+          <div className={styles.expression}>
+            {tutorialMessages[tutorial]}
           </div>
           <div className={styles.expression}
             style={{
@@ -286,6 +288,17 @@ export default function Tutorial() {
           </div>
         </div>
       </div>
+      :
+      <div className={styles.card}>
+        <h2 className={styles.sectionText}>Congratulations on completing the tutorial! 🎉</h2>
+        <div className={styles.buttonGroup}>
+          <Button onClick={resetTutorial}>Reset Tutorial</Button>
+          <Link href='/play'>
+            <Button>Start Game</Button>
+          </Link>
+        </div>
+      </div>
+      }
     </main>
   );
 }
