@@ -32,7 +32,7 @@ export default function App() {
   return (
     <main>
       <img src={PathMathLogo.src} alt="PathMath Logo"/>
-      <p className="tagline">Find the right path to practice math.</p>
+      <p className="tagline">The right path to getting better at math.</p>
       <div className="button-container">
         <Link href="/tutorial" className="tutorial-btn">Tutorial</Link>
         <Link href="/play" className="play-btn">Play</Link>

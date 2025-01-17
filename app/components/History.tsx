@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import styles from '../styles/History.module.css';
 import { HistoryState } from '../types/types';
+import { scoreMap } from '../constants/scoreMap';
 
 interface HistoryProps {
   history: HistoryState[];
@@ -13,9 +14,9 @@ export default function History({ history, totalScore, lives, level }: HistoryPr
   return (
     <div className={`${styles.history} ${styles.chalkboard}`}>
       <div className={styles.topBar}>
-        <span className={styles.text}>Lives: {'❤️'.repeat(lives)}</span>
-        <span className={styles.text}>Score: {totalScore}</span>
-        <span className={styles.text}>Level: {level}</span>
+        <span className={styles.topText}>Lives: {'❤️'.repeat(lives)}</span>
+        <span className={styles.topText}>Score: {totalScore} / {scoreMap.get(level)}</span>
+        <span className={styles.topText}>Level: {level}</span>
       </div>
       <h2 className={styles.text}>Equations</h2>
       {history.length === 0 ? (

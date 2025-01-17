@@ -13,6 +13,7 @@
   padding: 2rem;
   width: 100%;
   max-width: 400px;
+  margin: 30px;
 }
 
 .avatarContainer {
@@ -47,31 +48,26 @@
   margin: 0;
 }
 
-.stats {
+.profileSection {
   display: flex;
-  justify-content: space-around;
+  align-items: space-between; 
   border-top: 1px solid #e5e7eb;
   padding-top: 1.5rem;
+  gap: 10px;
 }
 
-.statItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.statNumber {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
-}
+.column1 { flex: 2 }
+.column2 { width: 20px }
+.column3 { flex: 5 }
 
 .statLabel {
   font-size: 0.875rem;
   color: #6b7280;
-  margin-top: 0.25rem;
+  margin-top: 0.1rem;
 }
 
-.h1 {
-  margin-bottom: 10px;
+.editButton {
+  margin-top: 0.1rem;
+  cursor: pointer;
+  user-select: none;
 }

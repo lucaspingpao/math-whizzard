@@ -5,17 +5,19 @@ import Square from '../components/Square';
 import styles from '../styles/PlayGame.module.css';
 import History from '../components/History';
 import { SquareState, HistoryState } from '../types/types';
-import boards, { levelSizes } from '../components/Boards';
+import { boards, levelSizes } from '../constants/boardStates';
 import { Button, Input } from '@aws-amplify/ui-react';
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { FaSave } from 'react-icons/fa';
 import Link from 'next/link';
+import { scoreMap } from '../constants/scoreMap';
+import { LevelUpOverlay } from '../components/LevelUp';
 
 export default function PlayGame() {
   const { user } = useAuthenticator();
   const NUM_LIVES = 3;
   const symbols = ['+', '−', '×', '÷', '='];
-  const TIME_LIMIT = 20;
+  const TIME_LIMIT = 30;
 
   const [level, setLevel] = useState<number>(1);
   const [board, setBoard] = useState<SquareState[][]>(boards[level - 1]);
@@ -34,6 +36,12 @@ export default function PlayGame() {
   const [saved, setSaved] = useState<string>('Click save to change your username');
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 20) return;
+    if (event.target.value.length > 0 && !/^[a-zA-Z0-9_-]+$/.test(event.target.value)) {
+      setSaved('Username must only contain letters, numbers, hyphens, and underscores.')
+      return;
+    }
+    setSaved('Click save to change your username')
     setUserInput(event.target.value);
   };
 
@@ -42,13 +50,12 @@ export default function PlayGame() {
     fetch(apiUrl, {
       method: 'GET',
     })
-      .then(response => response.json())
-      .then(data => {
-        const u = JSON.parse(data.body).data[0][3];
-          console.log(u);
-          setUsername(u);
-        })
-      .catch(error => console.error('Error:', error));
+    .then(response => response.json())
+    .then(data => {
+      const u = JSON.parse(data.body).data[0][3];
+        setUsername(u);
+      })
+    .catch(error => console.error('Error:', error));
   }
 
   const handleChangeUsername = () => {
@@ -287,23 +294,21 @@ export default function PlayGame() {
     levelUp(newScore);
   }
 
-  const scoreMap = new Map<number, number>([
-    [1, 100],
-    [2, 200],
-    [3, 1000],
-    [4, 5000],
-    [5, 100000],
-    [6, 800000]
-  ]);
-  
+  // Add state for animation
+  const [showLevelUpAnimation, setShowLevelUpAnimation] = useState<boolean>(false);
+
+  // Modify levelUp function to trigger animation
   const levelUp = (newScore: number) => {
     const threshold = scoreMap.get(level);
     if (threshold !== undefined && newScore >= threshold) {
+      setShowLevelUpAnimation(true);
+      setTimeout(() => setShowLevelUpAnimation(false), 1500);
       setLevel((prev) => Math.min(prev + 1, 6));
       setBoard(boards[level]);
       initializeBoard();
     }
   }
+  
   const checkDisabled = (expr: string[]) => {
     const indexOfEquals = expr.indexOf('=');
     if (indexOfEquals === -1) return true;
@@ -320,7 +325,8 @@ export default function PlayGame() {
       </div>
       <div className={styles.row}>
         {!gameOver ?
-        <div className={styles.column}>
+        <div className={`${styles.column} ${styles.card}`}>
+          <LevelUpOverlay show={showLevelUpAnimation} />
           <div className={styles.expression}>
             {expression.length > 0 ? expression.join(' ') : "Click on the squares to start typing an expression!"}
           </div>
@@ -371,7 +377,7 @@ export default function PlayGame() {
           </div>
         </div>
         :
-        <div className={styles.column}>
+        <div className={`${styles.column} ${styles.card} ${styles.gameOverCard}`}>
           <h1 className={styles.gameOverTitle}>Game over!</h1>
           <p className={styles.finalScore}>Final score: {score}</p>
           <p className={styles.usernameDisplay}>Your current username is: {username}</p>
@@ -382,7 +388,7 @@ export default function PlayGame() {
               placeholder="Type a new username here:"
               onChange={handleInput}
             />
-            <Button onClick={handleChangeUsername} disabled={userInput.length === 0}>
+            <Button onClick={handleChangeUsername} disabled={userInput.length < 3}>
               Save&nbsp;<FaSave />
             </Button>
           </div>
@@ -400,6 +406,7 @@ export default function PlayGame() {
                 setHistory([]);
                 initializeBoard();
                 getUsername();
+                setConfirm('');
                 setSaved('Click save to change your username')
               }}
             >
@@ -421,4 +428,3 @@ export default function PlayGame() {
     </div>
   );
 }
-
