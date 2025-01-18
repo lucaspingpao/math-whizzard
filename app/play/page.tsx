@@ -277,7 +277,7 @@ export default function PlayGame() {
       ]);
       
     } else {
-      const penalty = Math.pow(10, ((levelSizes.get(level) ?? 3) - 3) / 2);
+      const penalty = 10;
       newScore -= penalty;
       setScore(newScore);
       setConfirm('Incorrect :(');
@@ -299,14 +299,23 @@ export default function PlayGame() {
 
   // Modify levelUp function to trigger animation
   const levelUp = (newScore: number) => {
-    const threshold = scoreMap.get(level);
-    if (threshold !== undefined && newScore >= threshold) {
+    let currentScore = newScore;
+    let currentLevel = level;
+    
+    do {
+      const threshold = scoreMap.get(currentLevel);
+      if (threshold === undefined || currentScore < threshold) {
+        break;
+      }
+      
       setShowLevelUpAnimation(true);
       setTimeout(() => setShowLevelUpAnimation(false), 1500);
-      setLevel((prev) => Math.min(prev + 1, 6));
-      setBoard(boards[level]);
+      currentLevel += 1
+      setLevel(currentLevel);
+      setBoard(boards[currentLevel - 1]);
       initializeBoard();
-    }
+      
+    } while (currentLevel < 6);
   }
   
   const checkDisabled = (expr: string[]) => {

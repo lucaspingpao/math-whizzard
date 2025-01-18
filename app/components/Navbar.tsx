@@ -28,13 +28,8 @@ export default function Navbar() {
                 Stats
               </MenuItem>
             </Link>
-            <Link href="/profile">
-              <MenuItem style={{width: "100%"}}>
-                Profile
-              </MenuItem>
-            </Link>
             <Divider />
-            <MenuItem onClick={signOut}>Log In</MenuItem>
+            <MenuItem onClick={() => alert('Already signed in!')}>Log In</MenuItem>
             <MenuItem onClick={signOut}>Sign Out</MenuItem>
           </Menu>
         </div>

@@ -96,6 +96,7 @@ export default function ProfileDashboard() {
           <div className={styles.column1}>
             <p className={styles.statLabel}>Username:</p>
             <p className={styles.statLabel}>Email:</p>
+            <p className={styles.statLabel}>Highest Score:</p>
             <p className={styles.statLabel}>Games Played:</p>
           </div>
           <div className={styles.column2}>
@@ -104,6 +105,7 @@ export default function ProfileDashboard() {
           <div className={styles.column3}>
             <p className={styles.statLabel}>{username}</p>
             <p className={styles.statLabel}>{email}</p>
+            <p className={styles.statLabel}>{gamesPlayed}</p>
             <p className={styles.statLabel}>{gamesPlayed}</p>
           </div>
         </div>

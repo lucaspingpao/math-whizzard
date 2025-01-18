@@ -33,5 +33,5 @@ export const tutorialMessages = [
   "Click on the squares to start typing an expression. The path of squares must be connected.",
   "Sometimes the operations might change. Collect some more points to reach the next level!",
   "What happens if it's wrong? Try evaluating a wrong expression on purpose to lose a life.",
-  "In the real game, you are racing against the timer bar above. Let's get one more expression!"
+  "In the real game, you are also racing against the timer bar above. Let's get one more expression!"
 ];

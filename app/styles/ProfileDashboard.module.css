@@ -12,7 +12,7 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 500px;
   margin: 30px;
 }
 
@@ -56,9 +56,9 @@
   gap: 10px;
 }
 
-.column1 { flex: 2 }
+.column1 { flex: 1 }
 .column2 { width: 20px }
-.column3 { flex: 5 }
+.column3 { flex: 2 }
 
 .statLabel {
   font-size: 0.875rem;
