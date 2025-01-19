@@ -71,3 +71,7 @@
   cursor: pointer;
   user-select: none;
 }
+
+.header {
+  text-align: center;
+}

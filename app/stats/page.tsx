@@ -5,29 +5,29 @@ import styles from '../styles/Stats.module.css';
 import Loading from '../components/Loading';
 
 interface Stats {
-  user_id: string;
+  username: string;
   score: number;
   created_at: string;
 }
 
 const mockStats: Stats[] = [
   {
-    user_id: "alice_test", 
+    username: "alice_test", 
     score: 1250,
     created_at: "2023-05-01T12:00:00Z"
   },
   {
-    user_id: "alice_test",
+    username: "alice_test",
     score: 1250,
     created_at: "2023-05-01T12:00:00Z"
   },
   {
-    user_id: "alice_test",
+    username: "alice_test",
     score: 1250,
     created_at: "2023-05-01T12:00:00Z"
   },
   {
-    user_id: "alice_test",
+    username: "alice_test",
     score: 1250,
     created_at: "2023-05-01T12:00:00Z"
   },
@@ -46,7 +46,9 @@ export default function Leaderboard() {
 
     const date = new Date(dateString);
     const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    const nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+    const diffInSeconds = Math.floor((nowUTC.getTime() - date.getTime()) / 1000);
     
     const timeUnits = [
       { limit: 60, divisor: 1, unit: 'second' },
@@ -71,11 +73,10 @@ export default function Leaderboard() {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data)
         const parsedData = JSON.parse(data.body).data;
         while (parsedData.length < 10) {
           parsedData.push({
-            user_id: "...",
+            username: "...",
             score: "...",
             created_at: "..."
           });
@@ -102,7 +103,7 @@ export default function Leaderboard() {
             stats.map((player, index) => (
               <tr key={index} className={styles.tr}>
                 <td className={styles.td}>{index + 1}</td>
-                <td className={styles.td}>{player.user_id}</td>
+                <td className={styles.td}>{player.username}</td>
                 <td className={styles.td}>{player.score}</td>
                 <td className={styles.td}>{getTimeAgo(player.created_at)}</td>
               </tr>

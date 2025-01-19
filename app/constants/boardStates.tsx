@@ -24,7 +24,7 @@ boards[0][1][3] = {color: '#ffffff', val: '='};
 boards[0][3][1] = {color: '#ffffff', val: '='};
 
 boards[0][1][1] = {color: '#ffffff', val: '+'};
-boards[0][3][3] = {color: '#ffffff', val: '−'};
+boards[0][3][3] = {color: '#ffffff', val: '+'};
 
 // Level 2
 boards[1][1][3] = {color: '#ffffff', val: '='};
@@ -42,8 +42,8 @@ boards[2][3][3] = {color: '#ffffff', val: '='};
 
 boards[2][1][3] = {color: '#ffffff', val: '+'};
 boards[2][5][3] = {color: '#ffffff', val: '−'};
-boards[2][3][1] = {color: '#ffffff', val: '×'};
-boards[2][3][5] = {color: '#ffffff', val: '÷'};
+boards[2][3][1] = {color: '#ffffff', val: '+'};
+boards[2][3][5] = {color: '#ffffff', val: '−'};
 
 // Level 4
 boards[3][1][1] = {color: '#ffffff', val: '='};
@@ -70,12 +70,13 @@ boards[4][5][5] = {color: '#ffffff', val: '='};
 
 boards[4][1][3] = {color: '#ffffff', val: '+'};
 boards[4][1][5] = {color: '#ffffff', val: '+'};
-boards[4][7][3] = {color: '#ffffff', val: '−'};
-boards[4][7][5] = {color: '#ffffff', val: '−'};
-boards[4][3][1] = {color: '#ffffff', val: '×'};
-boards[4][5][1] = {color: '#ffffff', val: '×'};
-boards[4][3][7] = {color: '#ffffff', val: '÷'};
-boards[4][5][7] = {color: '#ffffff', val: '÷'};
+boards[4][7][3] = {color: '#ffffff', val: '+'};
+boards[4][7][5] = {color: '#ffffff', val: '+'};
+boards[4][3][1] = {color: '#ffffff', val: '−'};
+boards[4][5][1] = {color: '#ffffff', val: '−'};
+boards[4][3][7] = {color: '#ffffff', val: '−'};
+boards[4][5][7] = {color: '#ffffff', val: '−'};
+boards[4][4][4] = {color: '#ffffff', val: '×'};
 
 // Level 6
 boards[5][1][1] = {color: '#ffffff', val: '='};
@@ -96,5 +97,6 @@ boards[5][3][1] = {color: '#ffffff', val: '×'};
 boards[5][5][1] = {color: '#ffffff', val: '×'};
 boards[5][3][7] = {color: '#ffffff', val: '÷'};
 boards[5][5][7] = {color: '#ffffff', val: '÷'};
+boards[5][4][4] = {color: '#ffffff', val: '×'};
 
 export { boards };

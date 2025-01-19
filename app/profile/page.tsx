@@ -1,16 +1,34 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import styles from '../styles/ProfileDashboard.module.css';
 import { useAuthenticator } from "@aws-amplify/ui-react";
-const avatarUrl = "https://d1.awsstatic.com/asset-repository/products/amazon-rds/1024px-MySQL.ff87215b43fd7292af172e2a5d9b844217262571.png"; 
 import { FaPencilAlt } from 'react-icons/fa';
+import { uploadData } from 'aws-amplify/storage';
+import { StorageImage } from '@aws-amplify/ui-react-storage';
 
 export default function ProfileDashboard() {
   const { user } = useAuthenticator();
   const email = user.signInDetails?.loginId;
-  const [username, setUsername] = useState<string>('')
+  const [username, setUsername] = useState<string>('not_found');
   const [gamesPlayed, setGamesPlayed] = useState<number>(0);
+  const avatarUrl = `picture-submissions/${user.userId}`;
+  const [file, setFile] = useState<File | null>(null);
+  
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event?.target?.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      try {
+        await uploadData({
+          path: avatarUrl,
+          data: selectedFile,
+        });
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    }
+  };
 
   const getUsername = () => {
     const apiUrl = 'https://smwylkwm55.execute-api.us-east-2.amazonaws.com/default/users';
@@ -19,9 +37,13 @@ export default function ProfileDashboard() {
     })
     .then(response => response.json())
     .then(data => {
-      const u = JSON.parse(data.body).data[0][3];
+      const u = JSON.parse(data.body).data.find(([first]: string[]) => first === user.userId)?.[1];
+      if (u) {
         setUsername(u);
-      })
+      } else {
+        editName();
+      }
+    })
     .catch(error => console.error('Error:', error));
   }
 
@@ -86,18 +108,36 @@ export default function ProfileDashboard() {
       <h1 className={styles.header}>Welcome back, {username}!</h1>
       <div className={styles.profileCard}>
         <div className={styles.avatarContainer}>
-          <img src={avatarUrl} alt={username} className={styles.avatar} />
+          <label htmlFor="fileInput" className={styles.avatarLabel}>
+            {file ? (
+              <img 
+                src={URL.createObjectURL(file)} 
+                alt={username || "User"} 
+                className={styles.avatar}
+              />
+            ) : (
+              <StorageImage
+                alt={username || "User"}
+                path={avatarUrl} 
+                className={styles.avatar}
+                fallbackSrc={"https://www.gravatar.com/avatar/?d=identicon"}
+              />
+            )}
+          </label>
+          <input
+            type="file"
+            id="fileInput"
+            style={{ display: "none" }}
+            onChange={handleChange}
+          />
         </div>
         <div className={styles.info}>
           <h2 className={styles.name}>{username}</h2>
-          <p className={styles.email}>{email}</p>
         </div>
         <div className={styles.profileSection}>
           <div className={styles.column1}>
             <p className={styles.statLabel}>Username:</p>
             <p className={styles.statLabel}>Email:</p>
-            <p className={styles.statLabel}>Highest Score:</p>
-            <p className={styles.statLabel}>Games Played:</p>
           </div>
           <div className={styles.column2}>
             <div className={styles.editButton} onClick={editName}><FaPencilAlt /></div>
@@ -105,8 +145,6 @@ export default function ProfileDashboard() {
           <div className={styles.column3}>
             <p className={styles.statLabel}>{username}</p>
             <p className={styles.statLabel}>{email}</p>
-            <p className={styles.statLabel}>{gamesPlayed}</p>
-            <p className={styles.statLabel}>{gamesPlayed}</p>
           </div>
         </div>
       </div>

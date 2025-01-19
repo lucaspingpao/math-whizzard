@@ -29,7 +29,7 @@ export default function History({ history, totalScore, lives, level }: HistoryPr
               className={`${styles.historyItem} ${item.correct ? styles.correct : styles.incorrect} ${styles.text} ${item.isNew ? styles.fadeIn : ''}`}
             >
               <span className={`${styles.equation} ${styles.text}`}>{item.equation}</span>
-              <span className={`${styles.equation} ${styles.text}`}>{`${item.correct ? '+' : '-'}${item.score} points`}</span>
+              <span className={`${styles.equation} ${styles.text}`}>{`${item.correct ? '+' : '-'}${item.score} point${item.score === 1 ? '' : 's'}`}</span>
               <span className={`${styles.result} ${styles.text}`}>{item.correct ? '✓' : '✗'}</span>
             </div>
           ))}

@@ -2,9 +2,12 @@ import Link from 'next/link';
 import styles from '../styles/Navbar.module.css';
 import { Avatar, Menu, MenuItem, Divider } from '@aws-amplify/ui-react';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import { StorageImage } from '@aws-amplify/ui-react-storage';
 
 export default function Navbar() {
-  const { signOut } = useAuthenticator();
+  const { user, signOut } = useAuthenticator();
+  const avatarUrl = `picture-submissions/${user.userId}`;
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbarContainer}>
@@ -14,8 +17,13 @@ export default function Navbar() {
         <Link href="/stats" className={styles.navLink}>Stats</Link>
         <div className={styles.menu}>
           <Menu trigger={
-            <div className={styles.profilePic}>
-              <Avatar />
+            <div className={styles.avatarContainer}>
+              <StorageImage
+                alt={"User"}
+                path={avatarUrl}
+                className={styles.avatar}
+                fallbackSrc={"https://www.gravatar.com/avatar/?d=identicon"}
+              />
             </div>
           }>
             <Link href="/profile">

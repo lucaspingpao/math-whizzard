@@ -32,7 +32,7 @@ export default function PlayGame() {
   const timerRef = useRef<null | ReturnType<typeof setInterval>>(null);
   const [userInput, setUserInput] = useState<string>('');
   const [gameOver, setGameOver] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>('not found');
+  const [username, setUsername] = useState<string>('not_found');
   const [saved, setSaved] = useState<string>('Click save to change your username');
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +41,7 @@ export default function PlayGame() {
       setSaved('Username must only contain letters, numbers, hyphens, and underscores.')
       return;
     }
-    setSaved('Click save to change your username')
+    setSaved('Click save to change your username');
     setUserInput(event.target.value);
   };
 
@@ -52,10 +52,33 @@ export default function PlayGame() {
     })
     .then(response => response.json())
     .then(data => {
-      const u = JSON.parse(data.body).data[0][3];
+      const u = JSON.parse(data.body).data.find(([first]: string[]) => first === user.userId)?.[1];
+      if (u) {
         setUsername(u);
-      })
+      }
+    })
     .catch(error => console.error('Error:', error));
+  }
+
+  const postStats = async (newScore: number) => {
+    try {
+      const apiUrl = 'https://smwylkwm55.execute-api.us-east-2.amazonaws.com/default/stats';
+      const response = await fetch(apiUrl, {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: String(user.userId),
+          score: newScore
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      alert("Successfully saved your score!");
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
 
   const handleChangeUsername = () => {
@@ -75,6 +98,7 @@ export default function PlayGame() {
       .catch(error => console.error('Error:', error));
     setSaved(`Saved "${userInput}" as the new username!`)
     setUserInput('');
+    setUsername(userInput);
   };
 
   const startTimer = () => {
@@ -90,6 +114,7 @@ export default function PlayGame() {
         if (lives === 1) {
           setGameOver(true);
           setTimeLeft(TIME_LIMIT);
+          postStats(score);
         }
         resetTimer();
         setConfirm('Timeout! You lost a life 💔')
@@ -268,14 +293,21 @@ export default function PlayGame() {
     const newHistory = history.slice(-5).map(item => ({...item, isNew: false}));
     let newScore = score;
     if (left === right) {
-      newScore += left + clicked.length;
+      if (JSON.stringify(expr.slice(0, indexOfEquals)) === JSON.stringify(expr.slice(indexOfEquals + 1))) {
+        newScore += 1;
+        setHistory([
+          ...newHistory,
+          { equation: expr.join(' '), correct: true, score: 1, isNew: true }
+        ]);
+      } else {
+        newScore += left + clicked.length;
+        setHistory([
+          ...newHistory,
+          { equation: expr.join(' '), correct: true, score: left + clicked.length, isNew: true }
+        ]);
+      }
       setScore(newScore);
       setConfirm('Correct :)');
-      setHistory([
-        ...newHistory,
-        { equation: expr.join(' '), correct: true, score: left + clicked.length, isNew: true }
-      ]);
-      
     } else {
       const penalty = 10;
       newScore -= penalty;
@@ -288,6 +320,7 @@ export default function PlayGame() {
       ]);
       if (lives === 1) {
         setGameOver(true);
+        postStats(newScore);
       }
     }
     clearBoard(true);
