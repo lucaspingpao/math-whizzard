@@ -7,14 +7,12 @@ import History from '../components/History';
 import { SquareState, HistoryState } from '../types/types';
 import { boards, levelSizes } from '../constants/boardStates';
 import { Button, Input } from '@aws-amplify/ui-react';
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import { FaSave } from 'react-icons/fa';
 import Link from 'next/link';
 import { scoreMap } from '../constants/scoreMap';
 import { LevelUpOverlay } from '../components/LevelUp';
 
 export default function PlayGame() {
-  const { user } = useAuthenticator();
   const NUM_LIVES = 3;
   const symbols = ['+', '−', '×', '÷', '='];
   const TIME_LIMIT = 30;
@@ -30,76 +28,7 @@ export default function PlayGame() {
   const [highlight, setHighlight] = useState<number>(4);
   const [timeLeft, setTimeLeft] = useState<number>(TIME_LIMIT);
   const timerRef = useRef<null | ReturnType<typeof setInterval>>(null);
-  const [userInput, setUserInput] = useState<string>('');
   const [gameOver, setGameOver] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>('not_found');
-  const [saved, setSaved] = useState<string>('Click save to change your username');
-
-  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.length > 20) return;
-    if (event.target.value.length > 0 && !/^[a-zA-Z0-9_-]+$/.test(event.target.value)) {
-      setSaved('Username must only contain letters, numbers, hyphens, and underscores.')
-      return;
-    }
-    setSaved('Click save to change your username');
-    setUserInput(event.target.value);
-  };
-
-  const getUsername = () => {
-    const apiUrl = 'https://smwylkwm55.execute-api.us-east-2.amazonaws.com/default/users';
-    fetch(apiUrl, {
-      method: 'GET',
-    })
-    .then(response => response.json())
-    .then(data => {
-      const u = JSON.parse(data.body).data.find(([first]: string[]) => first === user.userId)?.[1];
-      if (u) {
-        setUsername(u);
-      }
-    })
-    .catch(error => console.error('Error:', error));
-  }
-
-  const postStats = async (newScore: number) => {
-    try {
-      const apiUrl = 'https://smwylkwm55.execute-api.us-east-2.amazonaws.com/default/stats';
-      const response = await fetch(apiUrl, {
-        method: 'POST', 
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: String(user.userId),
-          score: newScore
-        }),
-      });
-      const data = await response.json();
-      console.log(data);
-      alert("Successfully saved your score!");
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
-  const handleChangeUsername = () => {
-    const apiUrl = 'https://smwylkwm55.execute-api.us-east-2.amazonaws.com/default/users';
-    fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user_id: String(user.userId),
-        username: userInput
-      }),
-    })
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error('Error:', error));
-    setSaved(`Saved "${userInput}" as the new username!`)
-    setUserInput('');
-    setUsername(userInput);
-  };
 
   const startTimer = () => {
     if (gameOver) return;
@@ -114,7 +43,7 @@ export default function PlayGame() {
         if (lives === 1) {
           setGameOver(true);
           setTimeLeft(TIME_LIMIT);
-          postStats(score);
+          // postStats(score);
         }
         resetTimer();
         setConfirm('Timeout! You lost a life 💔')
@@ -154,7 +83,6 @@ export default function PlayGame() {
   
   useEffect(() => {
     initializeBoard();
-    getUsername();
   }, []);
   
   const handleSquareClick = (row: number, col: number) => {
@@ -320,7 +248,7 @@ export default function PlayGame() {
       ]);
       if (lives === 1) {
         setGameOver(true);
-        postStats(newScore);
+        // postStats(newScore);
       }
     }
     clearBoard(true);
@@ -377,12 +305,12 @@ export default function PlayGame() {
               className={styles.timerFill}
               style={{
                 width: `${(timeLeft / TIME_LIMIT) * 100}%`,
-                backgroundColor: timeLeft > 5 ? 'limegreen' : timeLeft > 2 ? 'orange' : 'red',
+                backgroundColor: timeLeft > 10 ? 'limegreen' : timeLeft > 5 ? 'orange' : 'red',
                 transition: timeLeft !== TIME_LIMIT ? 'width 0.1s linear' : 'none',
                 borderRadius: '5px',
                 height: '100%'
               }}
-            />
+            />  
           </div>
           <div
             className={styles.board}
@@ -422,20 +350,6 @@ export default function PlayGame() {
         <div className={`${styles.column} ${styles.card} ${styles.gameOverCard}`}>
           <h1 className={styles.gameOverTitle}>Game over!</h1>
           <p className={styles.finalScore}>Final score: {score}</p>
-          <p className={styles.usernameDisplay}>Your current username is: {username}</p>
-          <div className={styles.inputLine}>
-            <Input
-              className={styles.usernameInput}
-              value={userInput}
-              placeholder="Type a new username here:"
-              onChange={handleInput}
-            />
-            <Button onClick={handleChangeUsername} disabled={userInput.length < 3}>
-              Save&nbsp;<FaSave />
-            </Button>
-          </div>
-          <div className={styles.savedMessage}>{saved.length > 0 && saved}</div>
-
           <div className={styles.buttonGroup}>
             <Button 
               className={styles.playAgainButton}
@@ -447,9 +361,7 @@ export default function PlayGame() {
                 setLives(NUM_LIVES);
                 setHistory([]);
                 initializeBoard();
-                getUsername();
                 setConfirm('');
-                setSaved('Click save to change your username')
               }}
             >
               Play again?

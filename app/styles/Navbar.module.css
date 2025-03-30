@@ -21,16 +21,12 @@
   color: #007bff;
 }
 
-.menu {
+.avatarContainer {
   margin-left: auto;
   cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.avatarContainer {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   overflow: hidden;
   border-radius: 50%;
   background-color: #f0f0f0;
@@ -40,7 +36,7 @@
 .avatar {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
 }
 
 .avatarContainer:hover {
